@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MealMaster.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,21 +11,27 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MealMaster
+namespace MealMaster.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Логика взаимодействия для TestAllIngredients.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class TestAllIngredients : Window
     {
-        public MainWindow()
+
+        public TestAllIngredients()
         {
             InitializeComponent();
+
+            // Initialize your WeekPlan with sample data
+            WeekPlan ww = new WeekPlan();
             
-            mainFrame.NavigationService.Navigate(new Auth.AuthorizationPage());
+            // ... add days, recipes, and ingredients as needed ...
+
+            
+            DataContext = this;
         }
     }
 }

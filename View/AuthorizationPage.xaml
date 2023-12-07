@@ -1,0 +1,18 @@
+﻿<Page x:Class="MealMaster.Auth.AuthorizationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      Title="AuthorizationPage">
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="200">
+            <TextBlock Text="Username" />
+            <TextBox Name="UsernameTextBox" />
+            <TextBlock Text="Password" />
+            <PasswordBox Name="PasswordBox" />
+            <Button Content="Authorize" Click="Authorize_Click" />
+            <Button Content="I have no account" Click="HaveNoAccount_Click" />
+        </StackPanel>
+    </Grid>
+</Page>
