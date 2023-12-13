@@ -6,35 +6,93 @@
       mc:Ignorable="d"
       Title="WeekPlansPage">
 
-    <Grid>
-        <ListBox ItemsSource="{Binding WeekPlans}" Margin="5">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid HorizontalAlignment="Stretch" Width="Auto">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <!-- This column will take the remaining available space -->
-                            <ColumnDefinition Width="Auto"/>
-                            <!-- This column will adjust based on content -->
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+    <TabControl>
+        <TabItem Header="All Recipes">
 
-                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" />
+            <Grid>
 
-                        <Button Content="Favorite" 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ListBox ItemsSource="{Binding WeekPlans}" Margin="5" Grid.Row="0" Name="WeekPlansListbox">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Stretch" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" />
+
+                                <Button Content="Favorite" 
             Command="{Binding DataContext.MarkFavoriteCommand, RelativeSource={RelativeSource AncestorType={x:Type Page}}}" 
             CommandParameter="{Binding}" 
-            Grid.Column="1" HorizontalAlignment="Right"/>
+            Grid.Column="1" HorizontalAlignment="Right" Margin="5"/>
 
-                        <Button Content="Open" 
+                                <Button Content="Open" 
             Command="{Binding DataContext.OpenPlanCommand, RelativeSource={RelativeSource AncestorType={x:Type Page}}}" 
             CommandParameter="{Binding}" 
-            Grid.Column="2" HorizontalAlignment="Right"/>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            Grid.Column="2" HorizontalAlignment="Right" Margin="5"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
 
-        <Button Content="New WeekPlan" Command="{Binding NewWeekPlanCommand}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10"/>
-    </Grid>
+                </ListBox>
+
+                <Button Content="New WeekPlan" Command="{Binding NewWeekPlanCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="10" Grid.Row="1"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Created Recipes">
+
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ListBox ItemsSource="{Binding UserWeekPlans}" Margin="5" Grid.Row="0" Name="UserWeekPlansListbox">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Stretch" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" />
+
+                                <Button Content="Edit" 
+            Command="{Binding DataContext.EditPlanCommand, RelativeSource={RelativeSource AncestorType={x:Type Page}}}" 
+            CommandParameter="{Binding}" 
+            Grid.Column="1" HorizontalAlignment="Right" Margin="5"/>
+
+                                <Button Content="Delete" 
+            Command="{Binding DataContext.DeletePlanCommand, RelativeSource={RelativeSource AncestorType={x:Type Page}}}" 
+            CommandParameter="{Binding}" 
+            Grid.Column="2" HorizontalAlignment="Right" Margin="5"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+
+                </ListBox>
+
+                <Button Content="New WeekPlan" Command="{Binding NewWeekPlanCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="10" Grid.Row="1"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
+
 </Page>

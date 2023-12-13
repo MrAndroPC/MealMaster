@@ -15,6 +15,17 @@ namespace MealMaster.Model
         public decimal CarbW { get; set; }
         public decimal ProteinW { get; set; }
 
+        public Ingredient() { }
+
+        public Ingredient(int id, string name, decimal weight, decimal fatW, decimal carbW, decimal proteinW)
+        {
+            IngredientId = id;
+            Name = name;
+            Weight = weight;
+            FatW = fatW;
+            CarbW = carbW;
+            ProteinW = proteinW;
+        }
         public Ingredient(string name, decimal weight, decimal fatW, decimal carbW, decimal proteinW)
         {
             Name = name;

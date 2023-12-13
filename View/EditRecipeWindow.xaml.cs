@@ -37,7 +37,7 @@ namespace MealMaster.View
         private void AddIngredient_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.RecipeViewModel viewModel = (ViewModel.RecipeViewModel)DataContext;
-            viewModel.Ingredients.Add(new Ingredient("New Ingredient", 0, 0, 0, 0));
+            viewModel.Ingredients.Add(new Ingredient(1,"New Ingredient", 0, 0, 0, 0));
         }
 
         private void SaveRecipe_Click(object sender, RoutedEventArgs e)

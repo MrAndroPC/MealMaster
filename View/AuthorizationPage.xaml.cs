@@ -2,6 +2,7 @@
 using MealMaster.View;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,18 +27,28 @@ namespace MealMaster.Auth
         public AuthorizationPage()
         {
             InitializeComponent();
-            Database.InitializeDatabase();
+            DataBase.InitializeDatabase();
         }
 
         private void Authorize_Click(object sender, RoutedEventArgs e)
         {
-            View.TestDayWindow nnnn = new View.TestDayWindow();
-            nnnn.Show();
-}
+            if (DataBase.IsLoginAndPasswordCorrect(UsernameTextBox.Text, PasswordBox.Password))
+            {
+                Session.ActivateUser(UsernameTextBox.Text);
+                NavigationService.Navigate(new WeekPlansPage());
+/*                TestDayWindow nnnn = new TestDayWindow();
+                nnnn.Show();
+                Window.GetWindow(this).Close();
+*/            }
+            else
+            {
+                MessageBox.Show("Invalid login or password. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         private void HaveNoAccount_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new WeekPlansPage());
+            NavigationService.Navigate(new RegistrationPage());
         }
 
     }

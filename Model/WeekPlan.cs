@@ -17,6 +17,7 @@ namespace MealMaster.Model
         { 
             Days.Add(new Day());
             Ingredient ogurets = new Ingredient(
+                id: 1,
                 name: "Огурец",
                 weight: 123m,
                 fatW: 0.1m,
@@ -64,7 +65,7 @@ namespace MealMaster.Model
             
             var allIngredients = Days.SelectMany(day => day.Recipes.SelectMany(recipe => recipe.Ingredients));
 
- 
+
             var aggregatedIngredients = allIngredients
                 .GroupBy(ingredient => ingredient.Name)
                 .Select(group => new Ingredient(
@@ -73,7 +74,7 @@ namespace MealMaster.Model
                     group.Sum(ingredient => ingredient.FatW),
                     group.Sum(ingredient => ingredient.CarbW),
                     group.Sum(ingredient => ingredient.ProteinW)
-                ));
+                )); ;
 
             List<Ingredient> week_ing = aggregatedIngredients.ToList();
 
@@ -82,4 +83,6 @@ namespace MealMaster.Model
 
         public bool IsCreator(int id) => CreatorID == id;
     }
+
+
 }

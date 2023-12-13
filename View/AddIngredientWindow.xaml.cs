@@ -78,7 +78,8 @@ namespace MealMaster.View
         {
             if (NameTextBox.Text != null && WeightTextBox.Text != null && ProteinWTextBox.Text != null && FatWTextBox.Text != null && CarbWTextBox.Text != null)
             {
-                Ingredient res = new Ingredient(NameTextBox.Text,
+                Ingredient res = new Ingredient(
+                    NameTextBox.Text,
                     GetDecimalValue(WeightTextBox.Text), 
                     GetDecimalValue(FatWTextBox.Text), 
                     GetDecimalValue(CarbWTextBox.Text), 
