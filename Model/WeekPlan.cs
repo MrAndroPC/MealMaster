@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace MealMaster.Model
 {
-    internal class WeekPlan
+    public class WeekPlan
     {
+        public int WeekPlanId { get; set; }
         public List<Day> Days = new List<Day>();
-
+        public string Name { get; set; }
+        public int CreatorID { get; set; }
 
         public WeekPlan() 
         { 
@@ -59,10 +61,10 @@ namespace MealMaster.Model
 
         public List<Ingredient> ReturnWeekIngredients()
         {
-            // Flatten the structure using LINQ
+            
             var allIngredients = Days.SelectMany(day => day.Recipes.SelectMany(recipe => recipe.Ingredients));
 
-            // Group ingredients by name and aggregate their properties
+ 
             var aggregatedIngredients = allIngredients
                 .GroupBy(ingredient => ingredient.Name)
                 .Select(group => new Ingredient(
@@ -73,10 +75,11 @@ namespace MealMaster.Model
                     group.Sum(ingredient => ingredient.ProteinW)
                 ));
 
-            // Convert the result to a List
             List<Ingredient> week_ing = aggregatedIngredients.ToList();
 
             return week_ing;
         }
+
+        public bool IsCreator(int id) => CreatorID == id;
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MealMaster.Model;
+using MealMaster.View;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,18 +26,18 @@ namespace MealMaster.Auth
         public AuthorizationPage()
         {
             InitializeComponent();
+            Database.InitializeDatabase();
         }
 
         private void Authorize_Click(object sender, RoutedEventArgs e)
         {
-            View.TestAllIngredients nnnn = new View.TestAllIngredients();
+            View.TestDayWindow nnnn = new View.TestDayWindow();
             nnnn.Show();
-            MessageBox.Show("Authorization logic goes here");
 }
 
         private void HaveNoAccount_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new RegistrationPage());
+            NavigationService.Navigate(new WeekPlansPage());
         }
 
     }

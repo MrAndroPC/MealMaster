@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MealMaster.Model
 {
-    internal class Day
+    public class Day
     {
+        public int DayId { get; set; }
         public List<Recipe> Recipes { get; set; } = new List<Recipe>();
         public string DayName { get; set; }
 
@@ -45,9 +47,9 @@ namespace MealMaster.Model
         {
             Recipes.Add(i);
         }
-        public void RemoveRecipe(int id)
+        public void RemoveRecipe(Recipe id)
         {
-            Recipes.RemoveAt(id);
+            Recipes.Remove(id);
         }
     }
 }

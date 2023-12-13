@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace MealMaster.Model
 {
-    internal class Ingredient
+    public class Ingredient
     {
+        public int IngredientId { get; set; }
         public string Name { get; set; }
         public decimal Weight { get; set; }
         public decimal FatW { get; set; }

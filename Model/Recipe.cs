@@ -2,10 +2,12 @@
 
 namespace MealMaster.Model
 {
-    internal class Recipe
+    public class Recipe
     {
+        public int RecipeId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public int CreatorID { get; set; }
         public List<Ingredient> Ingredients { get; set; } = new List<Ingredient> { };
 
 
@@ -50,5 +52,7 @@ namespace MealMaster.Model
         {
             Ingredients.RemoveAt(id);
         }
+
+        public bool IsCreator(int user_id) => CreatorID == user_id;
     }
 }

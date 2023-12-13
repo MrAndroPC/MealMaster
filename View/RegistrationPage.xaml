@@ -6,6 +6,8 @@
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="200">
             <TextBlock Text="Username" />
             <TextBox Name="NewUsernameTextBox" />
+            <TextBlock Text="Login" />
+            <TextBox Name="NewLoginTextBox" />
             <TextBlock Text="Password" />
             <PasswordBox Name="NewPasswordBox" />
             <TextBlock Text="Confirm Password" />

@@ -1,5 +1,4 @@
-﻿using MealMaster.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,22 +15,15 @@ using System.Windows.Shapes;
 namespace MealMaster.View
 {
     /// <summary>
-    /// Логика взаимодействия для TestAllIngredients.xaml
+    /// Логика взаимодействия для WeekPlanWindow.xaml
     /// </summary>
-    public partial class TestAllIngredients : Window
+    public partial class WeekPlanWindow : Window
     {
-
-        public TestAllIngredients()
+        public WeekPlanWindow()
         {
             InitializeComponent();
+//            DataContext = new WeekPageViewModel();
 
-            // Initialize your WeekPlan with sample data
-            WeekPlan ww = new WeekPlan();
-            
-            // ... add days, recipes, and ingredients as needed ...
-
-            
-            DataContext = this;
         }
     }
 }

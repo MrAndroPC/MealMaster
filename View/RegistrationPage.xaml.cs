@@ -28,13 +28,13 @@ namespace MealMaster.Auth
 
         private void Register_Click(object sender, RoutedEventArgs e)
         {
-            // Implement your registration logic here
             MessageBox.Show("Registration logic goes here");
+            Model.User user = new Model.User();
+            user.Name = NewUsernameTextBox.Text;
         }
 
         private void HaveAccount_Click(object sender, RoutedEventArgs e)
         {
-            // Switch to the authorization page
             NavigationService.Navigate(new AuthorizationPage());
         }
 

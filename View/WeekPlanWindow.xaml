@@ -1,0 +1,31 @@
+﻿<Window x:Class="MealMaster.View.WeekPlanWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Week Page" Height="400" Width="600">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- Define 7 columns for each day -->
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Assuming you have a WeekPlan property in your ViewModel -->
+        <TextBlock Text="{Binding WeekPlan.Name}" Grid.ColumnSpan="7" HorizontalAlignment="Center" Margin="10"/>
+
+        <!-- Day buttons and information -->
+        <Button Content="Day 1" Command="{Binding OpenDayCommand}" CommandParameter="1" Grid.Column="0" Margin="5" VerticalAlignment="Bottom"/>
+        <Button Content="Day 2" Command="{Binding OpenDayCommand}" CommandParameter="2" Grid.Column="1" Margin="5" VerticalAlignment="Bottom"/>
+        <Button Content="Day 3" Command="{Binding OpenDayCommand}" CommandParameter="3" Grid.Column="2" Margin="5" VerticalAlignment="Bottom"/>
+        <Button Content="Day 4" Command="{Binding OpenDayCommand}" CommandParameter="4" Grid.Column="3" Margin="5" VerticalAlignment="Bottom"/>
+        <Button Content="Day 5" Command="{Binding OpenDayCommand}" CommandParameter="5" Grid.Column="4" Margin="5" VerticalAlignment="Bottom"/>
+        <Button Content="Day 6" Command="{Binding OpenDayCommand}" CommandParameter="6" Grid.Column="5" Margin="5" VerticalAlignment="Bottom"/>
+        <Button Content="Day 7" Command="{Binding OpenDayCommand}" CommandParameter="7" Grid.Column="6" Margin="5" VerticalAlignment="Bottom"/>
+
+        <!-- Additional day information can be displayed here -->
+    </Grid>
+</Window>

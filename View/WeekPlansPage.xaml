@@ -1,0 +1,40 @@
+﻿<Page x:Class="MealMaster.View.WeekPlansPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      Title="WeekPlansPage">
+
+    <Grid>
+        <ListBox ItemsSource="{Binding WeekPlans}" Margin="5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid HorizontalAlignment="Stretch" Width="Auto">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <!-- This column will take the remaining available space -->
+                            <ColumnDefinition Width="Auto"/>
+                            <!-- This column will adjust based on content -->
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" />
+
+                        <Button Content="Favorite" 
+            Command="{Binding DataContext.MarkFavoriteCommand, RelativeSource={RelativeSource AncestorType={x:Type Page}}}" 
+            CommandParameter="{Binding}" 
+            Grid.Column="1" HorizontalAlignment="Right"/>
+
+                        <Button Content="Open" 
+            Command="{Binding DataContext.OpenPlanCommand, RelativeSource={RelativeSource AncestorType={x:Type Page}}}" 
+            CommandParameter="{Binding}" 
+            Grid.Column="2" HorizontalAlignment="Right"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Button Content="New WeekPlan" Command="{Binding NewWeekPlanCommand}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10"/>
+    </Grid>
+</Page>
