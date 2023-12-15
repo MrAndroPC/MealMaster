@@ -9,7 +9,9 @@ namespace MealMaster.Model
 {
     public static class Session
     {
+        public static Recipe CurrentRecipe { get; set; }
         public static int CurrentUser { get; private set; }
+        public static WeekPlan CurrentWeekPlan { get; set; }
         public static void ActivateUser(string login)
         {
             if (!DataBase.IsLoginExists(login))

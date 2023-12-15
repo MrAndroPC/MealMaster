@@ -1,31 +1,45 @@
 ﻿<Window x:Class="MealMaster.View.EditRecipeWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Recipe Creation" Height="400" Width="600">
+        xmlns:vm="clr-namespace:MealMaster.ViewModel"
+        Title="Recipe Creation" Height="400" Width="600" >
 
+    <Window.DataContext>
+        <vm:RecipeViewModel/>
+    </Window.DataContext>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <StackPanel Margin="10">
             <TextBlock Text="Recipe Name:"/>
-            <TextBox x:Name="RecipeNameTextBox" Margin="0,0,0,10"/>
+            <TextBox x:Name="RecipeNameTextBox" Text="{Binding CurrentRecipe.Name}" Margin="0,0,0,10"/>
 
             <TextBlock Text="Recipe Description:"/>
-            <TextBox x:Name="RecipeDescriptionTextBox" Margin="0,0,0,10"/>
-
+            <TextBox x:Name="RecipeDescriptionTextBox" Text="{Binding CurrentRecipe.Description}" Margin="0,0,0,10"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1" >
             <TextBlock Text="Ingredients:"/>
-            <ListBox x:Name="IngredientsListBox" ItemsSource="{Binding Ingredients}" Margin="0,0,0,10">
+            <ListBox x:Name="IngredientsListBox" ItemsSource="{Binding CurrentRecipe.Ingredients}" Margin="0,0,0,10" VerticalAlignment="Stretch">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Name}" />
-                            <Button Content="Edit Ingredient" Click="EditIngredient_Click" />
-                            <Button Content="Remove Ingredient" Click="RemoveIngredient_Click" />
+                            <Button Content="Edit Ingredient" Command="{Binding DataContext.EditIngredientCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                            <Button Content="Remove Ingredient" Command="{Binding DataContext.RemoveIngredientCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
             </ListBox>
 
-            <Button Content="Add Ingredient" Click="AddIngredient_Click"/>
-            <Button Content="Save Recipe" Click="SaveRecipe_Click"/>
+            <Button Content="Add Ingredient" Command="{Binding AddIngredientCommand}" VerticalAlignment="Bottom"/>
+            <Button Content="Save Recipe" Command="{Binding SaveRecipeCommand}" VerticalAlignment="Bottom"/>
         </StackPanel>
     </Grid>
 </Window>

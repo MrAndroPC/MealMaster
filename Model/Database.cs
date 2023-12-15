@@ -7,6 +7,17 @@ namespace MealMaster.Model
     public static class DataBase
     {
         private const string ConnectionString = "Data Source=MealMaster.db;Version=3;";
+        private enum DaysOfWeek
+        {
+            Monday = 0,
+            Tuesday = 1,
+            Wednesday = 2,
+            Thursday = 3,
+            Friday = 4,
+            Saturday = 5,
+            Sunday = 6,
+
+        }
 
         public static void InitializeDatabase()
         {
@@ -55,12 +66,10 @@ namespace MealMaster.Model
 
                         CREATE TABLE IF NOT EXISTS UserFavorites (
                             UserId INTEGER,
-                            RecipeId INTEGER,
                             WeekPlanId INTEGER,
                             FOREIGN KEY (UserId) REFERENCES Users(UserId),
-                            FOREIGN KEY (RecipeId) REFERENCES Recipes(RecipeId),
                             FOREIGN KEY (WeekPlanId) REFERENCES WeekPlans(WeekPlanId),
-                            PRIMARY KEY (UserId, RecipeId, WeekPlanId)
+                            PRIMARY KEY (UserId, WeekPlanId)
                         );
 
                         CREATE TABLE IF NOT EXISTS RecipeIngredients (
@@ -247,7 +256,7 @@ namespace MealMaster.Model
             return userWeekPlans;
         }
 
-        private static List<Day> LoadDaysForWeekPlan(int weekPlanId)
+        public static List<Day> LoadDaysForWeekPlan(int weekPlanId)
         {
             List<Day> days = new List<Day>();
 
@@ -286,7 +295,7 @@ namespace MealMaster.Model
             return days;
         }
 
-        private static List<Recipe> LoadRecipesForDay(int dayId)
+        public static List<Recipe> LoadRecipesForDay(int dayId)
         {
             List<Recipe> recipes = new List<Recipe>();
 
@@ -316,7 +325,6 @@ namespace MealMaster.Model
                                 CreatorID = Convert.ToInt32(reader["CreatorID"]),
                             };
 
-                            // Load Ingredients for the Recipe
                             recipe.Ingredients = LoadIngredientsForRecipe(recipe.RecipeId);
 
                             recipes.Add(recipe);
@@ -325,7 +333,7 @@ namespace MealMaster.Model
                 }
             }
 
-            return recipes;
+            return (recipes);
         }
 
         private static List<Ingredient> LoadIngredientsForRecipe(int recipeId)
@@ -369,7 +377,6 @@ namespace MealMaster.Model
             return ingredients;
         }
 
-
         public static void CreateNewWeekPlan()
         {
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
@@ -383,10 +390,10 @@ namespace MealMaster.Model
                         using (SQLiteCommand command = new SQLiteCommand(connection))
                         {
                             command.CommandText = @"
-                            INSERT INTO WeekPlans (Name, CreatorID)
-                            VALUES (@Name, @CreatorID);";
+                        INSERT INTO WeekPlans (Name, CreatorID)
+                        VALUES (@Name, @CreatorID);";
 
-                            command.Parameters.AddWithValue("@Name", "New Week PLan");
+                            command.Parameters.AddWithValue("@Name", "New Week Plan");
                             command.Parameters.AddWithValue("@CreatorID", Session.CurrentUser);
 
                             command.ExecuteNonQuery();
@@ -401,13 +408,14 @@ namespace MealMaster.Model
 
                         for (int i = 0; i < 7; i++)
                         {
+
                             using (SQLiteCommand command = new SQLiteCommand(connection))
                             {
                                 command.CommandText = @"
-                                INSERT INTO Days (DayName)
-                                VALUES (@DayName);";
+                            INSERT INTO Days (DayName)
+                            VALUES (@DayName);";
 
-                                command.Parameters.AddWithValue("@DayName", Enum.GetName(typeof(DayOfWeek), i));
+                                command.Parameters.AddWithValue("@DayName", Enum.GetName(typeof(DaysOfWeek), i));
 
                                 command.ExecuteNonQuery();
                             }
@@ -422,11 +430,76 @@ namespace MealMaster.Model
                             using (SQLiteCommand command = new SQLiteCommand(connection))
                             {
                                 command.CommandText = @"
-                                INSERT INTO WeekPlanDays (WeekPlanId, DayId)
-                                VALUES (@WeekPlanId, @DayId);";
+                            INSERT INTO WeekPlanDays (WeekPlanId, DayId)
+                            VALUES (@WeekPlanId, @DayId);";
 
                                 command.Parameters.AddWithValue("@WeekPlanId", weekPlanId);
                                 command.Parameters.AddWithValue("@DayId", dayId);
+
+                                command.ExecuteNonQuery();
+                            }
+
+                            using (SQLiteCommand command = new SQLiteCommand(connection))
+                            {
+                                command.CommandText = @"
+                            INSERT INTO Recipes (Name, CreatorID)
+                            VALUES (@Name, @CreatorID);";
+
+                                command.Parameters.AddWithValue("@Name", $"Default Recipe for {Enum.GetName(typeof(DaysOfWeek), i)}");
+                                command.Parameters.AddWithValue("@CreatorID", Session.CurrentUser);
+
+                                command.ExecuteNonQuery();
+                            }
+
+                            int recipeId;
+                            using (SQLiteCommand command = new SQLiteCommand(connection))
+                            {
+                                command.CommandText = "SELECT last_insert_rowid();";
+                                recipeId = Convert.ToInt32(command.ExecuteScalar());
+                            }
+
+                            using (SQLiteCommand command = new SQLiteCommand(connection))
+                            {
+                                command.CommandText = @"
+                            INSERT INTO DayRecipes (DayId, RecipeId)
+                            VALUES (@DayId, @RecipeId);";
+
+                                command.Parameters.AddWithValue("@DayId", dayId);
+                                command.Parameters.AddWithValue("@RecipeId", recipeId);
+
+                                command.ExecuteNonQuery();
+                            }
+
+                            using (SQLiteCommand command = new SQLiteCommand(connection))
+                            {
+                                command.CommandText = @"
+                            INSERT INTO Ingredients (Name, Weight, FatW, CarbW, ProteinW)
+                            VALUES (@Name, @Weight, @FatW, @CarbW, @ProteinW);";
+
+                                command.Parameters.AddWithValue("@Name", $"Default Ingredient for {Enum.GetName(typeof(DaysOfWeek), i)}");
+                                command.Parameters.AddWithValue("@Weight", 100m); // Adjust the weight as needed
+                                command.Parameters.AddWithValue("@FatW", 10m); // Adjust the nutritional values as needed
+                                command.Parameters.AddWithValue("@CarbW", 20m);
+                                command.Parameters.AddWithValue("@ProteinW", 5m);
+
+                                command.ExecuteNonQuery();
+                            }
+
+                            int ingredientId;
+                            using (SQLiteCommand command = new SQLiteCommand(connection))
+                            {
+                                command.CommandText = "SELECT last_insert_rowid();";
+                                ingredientId = Convert.ToInt32(command.ExecuteScalar());
+                            }
+
+                            using (SQLiteCommand command = new SQLiteCommand(connection))
+                            {
+                                command.CommandText = @"
+                            INSERT INTO RecipeIngredients (RecipeId, IngredientId)
+                            VALUES (@RecipeId, @IngredientId);";
+
+                                command.Parameters.AddWithValue("@RecipeId", recipeId);
+                                command.Parameters.AddWithValue("@IngredientId", ingredientId);
 
                                 command.ExecuteNonQuery();
                             }
@@ -444,6 +517,81 @@ namespace MealMaster.Model
         }
 
 
+        /*      OLD FUNC 
+         *      public static void CreateNewWeekPlan()
+                {
+                    using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                    {
+                        connection.Open();
+
+                        using (SQLiteTransaction transaction = connection.BeginTransaction())
+                        {
+                            try
+                            {
+                                using (SQLiteCommand command = new SQLiteCommand(connection))
+                                {
+                                    command.CommandText = @"
+                                    INSERT INTO WeekPlans (Name, CreatorID)
+                                    VALUES (@Name, @CreatorID);";
+
+                                    command.Parameters.AddWithValue("@Name", "New Week PLan");
+                                    command.Parameters.AddWithValue("@CreatorID", Session.CurrentUser);
+
+                                    command.ExecuteNonQuery();
+                                }
+
+                                int weekPlanId;
+                                using (SQLiteCommand command = new SQLiteCommand(connection))
+                                {
+                                    command.CommandText = "SELECT last_insert_rowid();";
+                                    weekPlanId = Convert.ToInt32(command.ExecuteScalar());
+                                }
+
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    using (SQLiteCommand command = new SQLiteCommand(connection))
+                                    {
+                                        command.CommandText = @"
+                                        INSERT INTO Days (DayName)
+                                        VALUES (@DayName);";
+
+                                        command.Parameters.AddWithValue("@DayName", Enum.GetName(typeof(DaysOfWeek), i));
+
+                                        command.ExecuteNonQuery();
+                                    }
+
+                                    int dayId;
+                                    using (SQLiteCommand command = new SQLiteCommand(connection))
+                                    {
+                                        command.CommandText = "SELECT last_insert_rowid();";
+                                        dayId = Convert.ToInt32(command.ExecuteScalar());
+                                    }
+
+                                    using (SQLiteCommand command = new SQLiteCommand(connection))
+                                    {
+                                        command.CommandText = @"
+                                        INSERT INTO WeekPlanDays (WeekPlanId, DayId)
+                                        VALUES (@WeekPlanId, @DayId);";
+
+                                        command.Parameters.AddWithValue("@WeekPlanId", weekPlanId);
+                                        command.Parameters.AddWithValue("@DayId", dayId);
+
+                                        command.ExecuteNonQuery();
+                                    }
+                                }
+
+                                transaction.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                transaction.Rollback();
+                                throw;
+                            }
+                        }
+                    }
+                }*/
+
+
         public static void RemoveUserWeekPlan(int weekPlanId, int currentUserId)
         {
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
@@ -457,6 +605,18 @@ namespace MealMaster.Model
                         if (!IsUserWeekPlan(weekPlanId, currentUserId))
                         {
                             throw new UnauthorizedAccessException("The user does not have permission to delete this WeekPlan.");
+                        }
+
+                        List<int> dayIds = GetDayIdsForWeekPlan(weekPlanId);
+
+                        foreach (int dayId in dayIds)
+                        {
+                            using (SQLiteCommand command = new SQLiteCommand(connection))
+                            {
+                                command.CommandText = "DELETE FROM Days WHERE DayId = @DayId;";
+                                command.Parameters.AddWithValue("@DayId", dayId);
+                                command.ExecuteNonQuery();
+                            }
                         }
 
                         using (SQLiteCommand command = new SQLiteCommand(connection))
@@ -484,6 +644,37 @@ namespace MealMaster.Model
             }
         }
 
+        private static List<int> GetDayIdsForWeekPlan(int weekPlanId)
+        {
+            List<int> dayIds = new List<int>();
+
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = @"
+                    SELECT DayId
+                    FROM WeekPlanDays
+                    WHERE WeekPlanId = @WeekPlanId;";
+
+                    command.Parameters.AddWithValue("@WeekPlanId", weekPlanId);
+
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            dayIds.Add(Convert.ToInt32(reader["DayId"]));
+                        }
+                    }
+                }
+            }
+
+            return dayIds;
+        }
+
+
         private static bool IsUserWeekPlan(int weekPlanId, int currentUserId)
         {
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
@@ -507,6 +698,132 @@ namespace MealMaster.Model
                 }
             }
         }
+
+        public static void ChangeWeekPlanName(int weekPlanId, string newName, int currentUserId)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                try
+                {
+                    if (!IsUserWeekPlan(weekPlanId, currentUserId))
+                    {
+                        throw new UnauthorizedAccessException("The user does not have permission to change the name of this WeekPlan.");
+                    }
+
+                    using (SQLiteCommand command = new SQLiteCommand(connection))
+                    {
+                        command.CommandText = "UPDATE WeekPlans SET Name = @NewName WHERE WeekPlanId = @WeekPlanId;";
+                        command.Parameters.AddWithValue("@NewName", newName);
+                        command.Parameters.AddWithValue("@WeekPlanId", weekPlanId);
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
+        public static void MarkFavoriteWeekPlan(int userId, int weekPlanId)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (SQLiteTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SQLiteCommand command = new SQLiteCommand(connection))
+                        {
+                            command.CommandText = @"
+                            INSERT OR IGNORE INTO UserFavorites (UserId, WeekPlanId)
+                            VALUES (@UserId, @WeekPlanId);";
+
+                            command.Parameters.AddWithValue("@UserId", userId);
+                            command.Parameters.AddWithValue("@WeekPlanId", weekPlanId);
+
+                            command.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
+        public static void UnFavoriteWeekPlan(int userId, int weekPlanId)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = @"
+                    DELETE FROM UserFavorites
+                    WHERE UserId = @UserId
+                    AND WeekPlanId = @WeekPlanId;";
+
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    command.Parameters.AddWithValue("@WeekPlanId", weekPlanId);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+
+        public static ObservableCollection<WeekPlan> LoadFavoriteWeekPlans(int userId)
+        {
+            ObservableCollection<WeekPlan> favoriteWeekPlans = new ObservableCollection<WeekPlan>();
+
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = @"
+                    SELECT WeekPlans.* 
+                    FROM WeekPlans
+                    JOIN UserFavorites ON WeekPlans.WeekPlanId = UserFavorites.WeekPlanId
+                    WHERE UserFavorites.UserId = @UserId
+                    AND UserFavorites.WeekPlanId IS NOT NULL;";
+
+                    command.Parameters.AddWithValue("@UserId", userId);
+
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            WeekPlan weekPlan = new WeekPlan
+                            {
+                                WeekPlanId = Convert.ToInt32(reader["WeekPlanId"]),
+                                Name = Convert.ToString(reader["Name"]),
+                                CreatorID = Convert.ToInt32(reader["CreatorID"]),
+                            };
+
+                                weekPlan.Days = LoadDaysForWeekPlan(weekPlan.WeekPlanId);
+
+                            favoriteWeekPlans.Add(weekPlan);
+                        }
+                    }
+                }
+            }
+
+            return favoriteWeekPlans;
+        }
+
 
     }
 }

@@ -16,32 +16,19 @@ using System.Windows.Shapes;
 
 namespace MealMaster.View
 {
-    /// <summary>
-    /// Логика взаимодействия для EditRecipeWindow.xaml
-    /// </summary>
     public partial class EditRecipeWindow : Window
     {
         public EditRecipeWindow()
         {
             InitializeComponent();
-            DataContext = new ViewModel.RecipeViewModel();
         }
 
-        private void EditIngredient_Click(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-        }
-        private void RemoveIngredient_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void AddIngredient_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.RecipeViewModel viewModel = (ViewModel.RecipeViewModel)DataContext;
-            viewModel.Ingredients.Add(new Ingredient(1,"New Ingredient", 0, 0, 0, 0));
-        }
-
-        private void SaveRecipe_Click(object sender, RoutedEventArgs e)
-        {
-        }
+/*            if (DataContext is ViewModel.RecipeViewModel viewModel)
+            {
+                viewModel.Initialize();
+            }
+*/        }
     }
 }

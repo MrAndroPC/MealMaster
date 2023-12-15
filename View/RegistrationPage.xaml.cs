@@ -16,9 +16,6 @@ using System.Windows.Shapes;
 
 namespace MealMaster.Auth
 {
-    /// <summary>
-    /// Логика взаимодействия для RegistrationPage.xaml
-    /// </summary>
     public partial class RegistrationPage : Page
     {
         public RegistrationPage()
@@ -30,20 +27,20 @@ namespace MealMaster.Auth
         private void Register_Click(object sender, RoutedEventArgs e)
         {
             if (NewLoginTextBox.Text.Length < 3)
-                MessageBox.Show("Login must be at least 3 characters long. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Login have at least 3 characters", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
             else if (NewPasswordBox.Password.Length < 3)
-                MessageBox.Show("Password must be at least 3 characters long. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Password have at least 3 characters ", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
             else if (!isPasswordsMatch(NewPasswordBox.Password, ConfirmPasswordBox.Password))
-                MessageBox.Show("Passwords don't match. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Passwords aren't same", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
             else if (DataBase.IsLoginExists(NewLoginTextBox.Text))
-                MessageBox.Show("Login's busy. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Login's busy", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
             else
             {
-                MessageBox.Show("Registration logic goes here");
+                MessageBox.Show("Validation complete");
                 Model.User user = new Model.User()
                 {
                     Name = NewUsernameTextBox.Text,
@@ -51,6 +48,8 @@ namespace MealMaster.Auth
                     Password = NewPasswordBox.Password
                 };
                 DataBase.SaveUser(user);
+                NavigationService.Navigate(new AuthorizationPage());
+
             }
         }
         private bool isPasswordsMatch(string password, string password2) => password == password2;

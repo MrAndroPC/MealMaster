@@ -40,7 +40,7 @@ namespace MealMaster.Model
         }
         public (decimal, decimal, decimal) ReturnIngredientPFC()
         {
-            return (ProteinW, FatW, CarbW);
+            return ((ProteinW / 100 * Weight), (FatW / 100 * Weight), (CarbW / 100 * Weight));
         }
     }
 }

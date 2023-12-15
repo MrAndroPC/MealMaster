@@ -1,4 +1,5 @@
 ﻿// WeekPlansPage.xaml.cs
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
@@ -12,7 +13,9 @@ namespace MealMaster.View
     {
         public ObservableCollection<WeekPlan> WeekPlans { get; set; }
         public ObservableCollection<WeekPlan> UserWeekPlans { get; set; }
+        public ObservableCollection<WeekPlan> FavWeekPlans { get; set; }
         public ICommand MakeFavoriteCommand { get; set; }
+        public ICommand MakeUnFavoriteCommand { get; set; }
         public ICommand OpenPlanCommand { get; set; }
         public ICommand NewWeekPlanCommand { get; set; }
         public ICommand EditPlanCommand { get; set; }
@@ -23,20 +26,34 @@ namespace MealMaster.View
             InitializeComponent();
             WeekPlans = DataBase.LoadAllWeekPlans();
             UserWeekPlans = DataBase.LoadUserWeekPlans();
+            FavWeekPlans = DataBase.LoadFavoriteWeekPlans(Session.CurrentUser);
 
             MakeFavoriteCommand = new RelayCommand(MakeFavorite);
+            MakeUnFavoriteCommand = new RelayCommand(MakeUnFavorite);
             OpenPlanCommand = new RelayCommand(OpenPlan);
             NewWeekPlanCommand = new RelayCommand(NewWeekPlan);
             EditPlanCommand = new RelayCommand(EditPlan);
             DeletePlanCommand = new RelayCommand(DeletePlan);
 
             DataContext = this;
+
+
         }
 
         private void MakeFavorite(object parameter)
         {
             if (parameter is WeekPlan plan)
             {
+                DataBase.MarkFavoriteWeekPlan(Session.CurrentUser, ((WeekPlan)parameter).WeekPlanId);
+                RefreshListboxes();
+            }
+        }
+        private void MakeUnFavorite(object parameter)
+        {
+            if (parameter is WeekPlan plan)
+            {
+                DataBase.UnFavoriteWeekPlan(Session.CurrentUser, ((WeekPlan)parameter).WeekPlanId);
+                RefreshListboxes();
             }
         }
 
@@ -46,7 +63,11 @@ namespace MealMaster.View
 
             if (parameter is WeekPlan plan)
             {
-
+                Session.CurrentWeekPlan = ((WeekPlan)parameter);
+                WeekPlanWindow nnnn = new WeekPlanWindow();
+                nnnn.CurrentPlan = Session.CurrentWeekPlan;
+                nnnn.Show();
+                nnnn.WeekPlanNameChanged += WeekPlanNameChangedHandler;
             }
         }
         private void EditPlan(object parameter)
@@ -73,9 +94,6 @@ namespace MealMaster.View
         {
             DataBase.CreateNewWeekPlan();
             RefreshListboxes();
-            /*            WeekPlanWindow nnnn = new WeekPlanWindow();
-                        nnnn.Show();
-            */
         }
 
 
@@ -101,6 +119,25 @@ namespace MealMaster.View
             }
 
             UserWeekPlansListbox.Items.Refresh();
+
+            updatedWeekPlans.Clear();
+            updatedWeekPlans = DataBase.LoadFavoriteWeekPlans(Session.CurrentUser);
+
+            if (FavWeekPlans != null) { 
+                FavWeekPlans.Clear(); 
+                foreach (var plan in updatedWeekPlans)
+                {
+                    FavWeekPlans.Add(plan);
+                }
+            }
+            FavWeekPlansListbox.Items.Refresh();
         }
+        private void WeekPlanNameChangedHandler(object sender, EventArgs e)
+        {
+            RefreshListboxes();
+        }
+
+
+
     }
 }

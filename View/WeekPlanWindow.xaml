@@ -1,29 +1,333 @@
 ﻿<Window x:Class="MealMaster.View.WeekPlanWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Week Page" Height="400" Width="600">
-    <ScrollViewer HorizontalScrollBarVisibility="Auto">
-        <Grid>
+        xmlns:vm="clr-namespace:MealMaster.View"
+        xmlns:m="clr-namespace:MealMaster.Model"
+                xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+                xmlns:converters="clr-namespace:MealMaster.Converters"
+    Title="Week Page" Height="400" Width="700">
+
+    <Window.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+
+    <Grid Margin="0,5,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-
-            <TextBlock Text="{Binding WeekPlan.Name}" Grid.ColumnSpan="7" HorizontalAlignment="Center" Margin="10"/>
-
-            <Button Content="Day 1" Command="{Binding OpenDayCommand}" CommandParameter="1" Grid.Column="0" Margin="5" VerticalAlignment="Bottom"/>
-            <Button Content="Day 2" Command="{Binding OpenDayCommand}" CommandParameter="2" Grid.Column="1" Margin="5" VerticalAlignment="Bottom"/>
-            <Button Content="Day 3" Command="{Binding OpenDayCommand}" CommandParameter="3" Grid.Column="2" Margin="5" VerticalAlignment="Bottom"/>
-            <Button Content="Day 4" Command="{Binding OpenDayCommand}" CommandParameter="4" Grid.Column="3" Margin="5" VerticalAlignment="Bottom"/>
-            <Button Content="Day 5" Command="{Binding OpenDayCommand}" CommandParameter="5" Grid.Column="4" Margin="5" VerticalAlignment="Bottom"/>
-            <Button Content="Day 6" Command="{Binding OpenDayCommand}" CommandParameter="6" Grid.Column="5" Margin="5" VerticalAlignment="Bottom"/>
-            <Button Content="Day 7" Command="{Binding OpenDayCommand}" CommandParameter="7" Grid.Column="6" Margin="5" VerticalAlignment="Bottom"/>
-
+                <TextBox Text="{Binding CurrentPlan.Name}" IsEnabled="{Binding IsUserMade}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Grid.Column="0" TextChanged="TextBox_TextChanged"/>
+            <Button Name="ApplyWeekPlanName" Click="ApplyWPName_Click" Content="Apply Name Changes" Visibility="Collapsed" Grid.Column="1"/>
         </Grid>
-    </ScrollViewer>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Row="1">
+            <TabControl TabStripPlacement="Left">
+                <TabControl.Items>
+                    <TabItem Header="Mon" >
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Recipes" HorizontalAlignment="Center" Margin="10"/>
+                            <ListBox ItemsSource="{Binding Recipes1}" Grid.Row="1" Margin="5">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" Grid.Column="0"/>
+                                            <!--<Button Content="Open" Click="OpenRecipe_Click" Grid.Column="1" HorizontalAlignment="Right" Margin="5"/>
+                                            <Button Content="Remove" Click="RemoveRecipe_Click" Grid.Column="2" HorizontalAlignment="Right" Margin="5"/>-->
+                                                <Button Content="Rem" 
+        Visibility="{Binding DataContext.IsUserMade, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource BooleanToVisibilityConverter}}"
+        Command="{Binding DataContext.RemCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+        CommandParameter="{Binding}" 
+        Grid.Column="1" HorizontalAlignment="Right" Margin="5"/>
+
+                                                <Button Content="Open" 
+            Command="{Binding DataContext.OpCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" 
+            CommandParameter="{Binding}" 
+            Grid.Column="2" HorizontalAlignment="Right" Margin="5"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+
+                                </ListBox>
+                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            </Grid>
+                    </TabItem>
+                    <TabItem Header="Tue" >
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Recipes" HorizontalAlignment="Center" Margin="10"/>
+                            <ListBox ItemsSource="{Binding Recipes2}" Grid.Row="1" Margin="5">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" Grid.Column="0"/>
+                                                <Button Content="Open" 
+            Command="{Binding DataContext.OpCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" 
+            CommandParameter="{Binding}" 
+            Grid.Column="2" HorizontalAlignment="Right" Margin="5"/>
+                                                <Button Content="Rem" 
+        Visibility="{Binding DataContext.IsUserMade, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource BooleanToVisibilityConverter}}"
+        Command="{Binding DataContext.RemCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+        CommandParameter="{Binding}" 
+        Grid.Column="1" HorizontalAlignment="Right" Margin="5"/>
+
+                                            </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+
+                                </ListBox>
+                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Wed" >
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Recipes" HorizontalAlignment="Center" Margin="10"/>
+                            <ListBox ItemsSource="{Binding Recipes3}" Grid.Row="1" Margin="5">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" Grid.Column="0"/>
+                                                <Button Content="Open" 
+            Command="{Binding DataContext.OpCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" 
+            CommandParameter="{Binding}" 
+            Grid.Column="2" HorizontalAlignment="Right" Margin="5"/>
+                                                <Button Content="Rem" 
+        Visibility="{Binding DataContext.IsUserMade, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource BooleanToVisibilityConverter}}"
+        Command="{Binding DataContext.RemCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+        CommandParameter="{Binding}" 
+        Grid.Column="1" HorizontalAlignment="Right" Margin="5"/>
+                                            </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+
+                                </ListBox>
+                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Thu" >
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Recipes" HorizontalAlignment="Center" Margin="10"/>
+                            <ListBox ItemsSource="{Binding Recipes4}" Grid.Row="1" Margin="5">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" Grid.Column="0"/>
+                                                <Button Content="Open" 
+            Command="{Binding DataContext.OpCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" 
+            CommandParameter="{Binding}" 
+            Grid.Column="2" HorizontalAlignment="Right" Margin="5"/>
+                                                <Button Content="Rem" 
+        Visibility="{Binding DataContext.IsUserMade, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource BooleanToVisibilityConverter}}"
+        Command="{Binding DataContext.RemCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+        CommandParameter="{Binding}" 
+        Grid.Column="1" HorizontalAlignment="Right" Margin="5"/>
+
+                                            </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+
+                                </ListBox>
+                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Fri" >
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Recipes" HorizontalAlignment="Center" Margin="10"/>
+                            <ListBox ItemsSource="{Binding Recipes5}" Grid.Row="1" Margin="5">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" Grid.Column="0"/>
+                                                <Button Content="Open" 
+            Command="{Binding DataContext.OpCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" 
+            CommandParameter="{Binding}" 
+            Grid.Column="2" HorizontalAlignment="Right" Margin="5"/>
+                                                <Button Content="Rem" 
+        Visibility="{Binding DataContext.IsUserMade, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource BooleanToVisibilityConverter}}"
+        Command="{Binding DataContext.RemCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+        CommandParameter="{Binding}" 
+        Grid.Column="1" HorizontalAlignment="Right" Margin="5"/>
+                                            </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+
+                                </ListBox>
+                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Sat" >
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Recipes" HorizontalAlignment="Center" Margin="10"/>
+                            <ListBox ItemsSource="{Binding Recipes6}" Grid.Row="1" Margin="5">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" Grid.Column="0"/>
+                                                <Button Content="Open" 
+            Command="{Binding DataContext.OpCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" 
+            CommandParameter="{Binding}" 
+            Grid.Column="2" HorizontalAlignment="Right" Margin="5"/>
+                                                <Button Content="Rem" 
+        Visibility="{Binding DataContext.IsUserMade, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource BooleanToVisibilityConverter}}"
+        Command="{Binding DataContext.RemCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+        CommandParameter="{Binding}" 
+        Grid.Column="1" HorizontalAlignment="Right" Margin="5"/>
+                                            </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+
+                                </ListBox>
+                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Sun" >
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Recipes" HorizontalAlignment="Center" Margin="10"/>
+                            <ListBox ItemsSource="{Binding Recipes7}" Grid.Row="1" Margin="5">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" Grid.Column="0"/>
+                                                <Button Content="Open" 
+            Command="{Binding DataContext.OpCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" 
+            CommandParameter="{Binding}" 
+            Grid.Column="2" HorizontalAlignment="Right" Margin="5"/>
+                                                <Button Content="Rem" 
+        Visibility="{Binding DataContext.IsUserMade, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource BooleanToVisibilityConverter}}"
+        Command="{Binding DataContext.RemCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+        CommandParameter="{Binding}" 
+        Grid.Column="1" HorizontalAlignment="Right" Margin="5"/>
+                                            </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+
+                                </ListBox>
+                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        </Grid>
+                    </TabItem>
+                </TabControl.Items>
+            </TabControl>
+        </ScrollViewer>
+        </Grid>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding CurrentCalories, StringFormat='Total week calories {0} cal'}" />
+            <lvc:PieChart Grid.Row="1" Margin="5" Visibility="Visible" Name="PiePP" LegendLocation="Bottom">
+                <lvc:PieChart.Series>
+                    <lvc:PieSeries Title="Fat" Values="{Binding FatValues}" DataLabels="True"/>
+                    <lvc:PieSeries Title="Carb" Values="{Binding CarbValues}" DataLabels="True"/>
+                    <lvc:PieSeries Title="Prot" Values="{Binding ProtValues}" DataLabels="True"/>
+                </lvc:PieChart.Series>
+            </lvc:PieChart>
+        </Grid>
+    </Grid>
 </Window>

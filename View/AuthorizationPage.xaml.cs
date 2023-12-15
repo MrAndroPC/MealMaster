@@ -19,9 +19,6 @@ using System.Windows.Shapes;
 
 namespace MealMaster.Auth
 {
-    /// <summary>
-    /// Логика взаимодействия для AuthorizationPage.xaml
-    /// </summary>
     public partial class AuthorizationPage : Page
     {
         public AuthorizationPage()
