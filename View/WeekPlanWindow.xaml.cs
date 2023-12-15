@@ -92,9 +92,6 @@ namespace MealMaster.View
         {
             MessageBox.Show($"{(sender).GetType().ToString}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-        public void OpenRecipe_Click(object sender, RoutedEventArgs e) { }
-        public void AddNewRecipe_Click(object sender, RoutedEventArgs e) { 
-        }
 
         private void ApplyWPName_Click(object sender, RoutedEventArgs e)
         {
@@ -102,6 +99,11 @@ namespace MealMaster.View
             WeekPlanNameChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        private void IngList_Click(object sender, RoutedEventArgs e)
+        {
+            AllIngredientsOfWeek nnn = new AllIngredientsOfWeek(CurrentPlan.ReturnWeekIngredients());
+            nnn.Show();
+        }
 
         public event EventHandler WeekPlanNameChanged;
 

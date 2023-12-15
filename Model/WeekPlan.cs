@@ -13,23 +13,6 @@ namespace MealMaster.Model
         public string Name { get; set; }
         public int CreatorID { get; set; }
 
-        public WeekPlan() 
-        { 
-            Days.Add(new Day());
-            Ingredient ogurets = new Ingredient(
-                id: 1,
-                name: "Огурец",
-                weight: 123m,
-                fatW: 0.1m,
-                carbW: 2.5m,
-                proteinW: 0.8m
-                );
-            Recipe a = new Recipe();
-            a.Name = "ddd";
-            a.AddIngredient(ogurets);
-            Days[0].DayName = "XXX";
-            Days[0].AddRecipe(a);
-        }
 
         public (decimal, decimal, decimal) ReturnWeekPFC()
         {
@@ -81,7 +64,6 @@ namespace MealMaster.Model
             return week_ing;
         }
 
-        public bool IsCreator(int id) => CreatorID == id;
     }
 
 

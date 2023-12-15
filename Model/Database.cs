@@ -18,7 +18,6 @@ namespace MealMaster.Model
             Sunday = 6,
 
         }
-
         public static void InitializeDatabase()
         {
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
@@ -515,81 +514,6 @@ namespace MealMaster.Model
                 }
             }
         }
-
-
-        /*      OLD FUNC 
-         *      public static void CreateNewWeekPlan()
-                {
-                    using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
-                    {
-                        connection.Open();
-
-                        using (SQLiteTransaction transaction = connection.BeginTransaction())
-                        {
-                            try
-                            {
-                                using (SQLiteCommand command = new SQLiteCommand(connection))
-                                {
-                                    command.CommandText = @"
-                                    INSERT INTO WeekPlans (Name, CreatorID)
-                                    VALUES (@Name, @CreatorID);";
-
-                                    command.Parameters.AddWithValue("@Name", "New Week PLan");
-                                    command.Parameters.AddWithValue("@CreatorID", Session.CurrentUser);
-
-                                    command.ExecuteNonQuery();
-                                }
-
-                                int weekPlanId;
-                                using (SQLiteCommand command = new SQLiteCommand(connection))
-                                {
-                                    command.CommandText = "SELECT last_insert_rowid();";
-                                    weekPlanId = Convert.ToInt32(command.ExecuteScalar());
-                                }
-
-                                for (int i = 0; i < 7; i++)
-                                {
-                                    using (SQLiteCommand command = new SQLiteCommand(connection))
-                                    {
-                                        command.CommandText = @"
-                                        INSERT INTO Days (DayName)
-                                        VALUES (@DayName);";
-
-                                        command.Parameters.AddWithValue("@DayName", Enum.GetName(typeof(DaysOfWeek), i));
-
-                                        command.ExecuteNonQuery();
-                                    }
-
-                                    int dayId;
-                                    using (SQLiteCommand command = new SQLiteCommand(connection))
-                                    {
-                                        command.CommandText = "SELECT last_insert_rowid();";
-                                        dayId = Convert.ToInt32(command.ExecuteScalar());
-                                    }
-
-                                    using (SQLiteCommand command = new SQLiteCommand(connection))
-                                    {
-                                        command.CommandText = @"
-                                        INSERT INTO WeekPlanDays (WeekPlanId, DayId)
-                                        VALUES (@WeekPlanId, @DayId);";
-
-                                        command.Parameters.AddWithValue("@WeekPlanId", weekPlanId);
-                                        command.Parameters.AddWithValue("@DayId", dayId);
-
-                                        command.ExecuteNonQuery();
-                                    }
-                                }
-
-                                transaction.Commit();
-                            }
-                            catch (Exception)
-                            {
-                                transaction.Rollback();
-                                throw;
-                            }
-                        }
-                    }
-                }*/
 
 
         public static void RemoveUserWeekPlan(int weekPlanId, int currentUserId)

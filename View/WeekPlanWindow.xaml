@@ -71,7 +71,7 @@
                                     </ListBox.ItemContainerStyle>
 
                                 </ListBox>
-                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Button Content="Add New Recipe"  Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             </Grid>
                     </TabItem>
                     <TabItem Header="Tue" >
@@ -111,7 +111,7 @@
                                     </ListBox.ItemContainerStyle>
 
                                 </ListBox>
-                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Button Content="Add New Recipe"  Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Wed" >
@@ -150,7 +150,7 @@
                                     </ListBox.ItemContainerStyle>
 
                                 </ListBox>
-                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Button Content="Add New Recipe"  Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Thu" >
@@ -190,7 +190,7 @@
                                     </ListBox.ItemContainerStyle>
 
                                 </ListBox>
-                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Button Content="Add New Recipe"  Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Fri" >
@@ -229,7 +229,7 @@
                                     </ListBox.ItemContainerStyle>
 
                                 </ListBox>
-                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Button Content="Add New Recipe"  Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Sat" >
@@ -268,7 +268,7 @@
                                     </ListBox.ItemContainerStyle>
 
                                 </ListBox>
-                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Button Content="Add New Recipe"  Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Sun" >
@@ -307,7 +307,7 @@
                                     </ListBox.ItemContainerStyle>
 
                                 </ListBox>
-                                <Button Content="Add New Recipe" Click="AddNewRecipe_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Button Content="Add New Recipe"  Grid.Row="1" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding DataContext.IsUserMade, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         </Grid>
                     </TabItem>
                 </TabControl.Items>
@@ -328,6 +328,7 @@
                     <lvc:PieSeries Title="Prot" Values="{Binding ProtValues}" DataLabels="True"/>
                 </lvc:PieChart.Series>
             </lvc:PieChart>
+            <Button Content="Ingredients list" Click="IngList_Click" Grid.Row="1" VerticalAlignment="Bottom" Margin="5" />
         </Grid>
     </Grid>
 </Window>

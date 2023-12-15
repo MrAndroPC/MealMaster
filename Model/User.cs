@@ -11,9 +11,8 @@ namespace MealMaster.Model
         public int UserId { get; set; }
         public string Name { get; set; }
         public string Login { get; set; }
-        public string Password { get; set; }
+        internal string Password { get; set; }
         public List<WeekPlan> FavouriteWeekPlans { get; set; }
-        public List<Recipe> FavouriteRecipes { get; set; }
         public List<WeekPlan> CreatedPlans { get; set; }
         public List<Recipe> CreatedRecipes { get; set; } 
     }

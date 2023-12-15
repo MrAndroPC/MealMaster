@@ -52,7 +52,5 @@ namespace MealMaster.Model
         {
             Ingredients.RemoveAt(id);
         }
-
-        public bool IsCreator(int user_id) => CreatorID == user_id;
     }
 }
